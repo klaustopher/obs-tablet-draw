@@ -155,6 +155,7 @@ Die Auswahl steht in der Toolbar.
 ```sh
 npm run dev        # Dev-Server mit HMR auf Port 5173 (auch im LAN)
 npm run typecheck  # App (tsconfig.json) und vite.config.ts (tsconfig.node.json)
+npm test           # Vitest, läuft auch in GitHub Actions bei Push und PR
 npm run build
 ```
 
@@ -164,7 +165,8 @@ npm run build
 | `src/board.ts` | Zustand der Zeichnung, wird aus den Events aufgebaut |
 | `src/render.ts` | Canvas-Rendering, gemeinsam für iPad und Overlay |
 | `src/obs.ts` | Verbindung zu obs-websocket inkl. Reconnect |
-| `src/overlay.ts` | Browser Source; ordnet Events nach `seq`, weil obs-websocket Broadcasts nicht in Reihenfolge zustellt |
+| `src/overlay.ts` | Browser Source |
+| `src/sequencer.ts` | Ordnet Events nach `seq`, weil obs-websocket Broadcasts nicht in Reihenfolge zustellt |
 | `src/ipad/` | Zeichen-App (React) |
 
 ## Lizenz
