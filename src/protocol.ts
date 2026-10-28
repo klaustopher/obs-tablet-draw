@@ -23,7 +23,7 @@ export type DrawEvent =
 export type Sender = "ipad" | "overlay"
 
 export interface Envelope {
-  app: "obs-draw"
+  app: "obs-tablet-draw"
   from: Sender
   seq: number
   event: DrawEvent

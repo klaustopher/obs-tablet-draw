@@ -29,7 +29,7 @@ function printAppUrls(server: ViteDevServer | PreviewServer) {
 
 function appUrls(): Plugin {
   return {
-    name: "obs-draw:app-urls",
+    name: "obs-tablet-draw:app-urls",
     configureServer: printAppUrls,
     configurePreviewServer: printAppUrls,
   }

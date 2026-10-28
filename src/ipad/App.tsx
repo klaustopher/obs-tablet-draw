@@ -24,10 +24,10 @@ function resolveSource(selected: string | undefined, info: ObsInfo | null) {
 }
 
 export function App() {
-  const [mode, setMode] = useStoredState<Mode>("obs-draw:mode", "pen")
-  const [color, setColor] = useStoredState("obs-draw:color", COLORS[0])
-  const [size, setSize] = useStoredState("obs-draw:size", 6)
-  const [selectedSource, selectSource] = useStoredState<string | undefined>("obs-draw:source", undefined)
+  const [mode, setMode] = useStoredState<Mode>("obs-tablet-draw:mode", "pen")
+  const [color, setColor] = useStoredState("obs-tablet-draw:color", COLORS[0])
+  const [size, setSize] = useStoredState("obs-tablet-draw:size", 6)
+  const [selectedSource, selectSource] = useStoredState<string | undefined>("obs-tablet-draw:source", undefined)
   const [view, setView] = useState(FULL_VIEW)
   const compact = useMediaQuery(COMPACT_TOOLBAR_QUERY)
 

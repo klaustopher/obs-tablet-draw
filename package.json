@@ -1,6 +1,7 @@
 {
-  "name": "obs-draw",
+  "name": "obs-tablet-draw",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite --host",

@@ -22,7 +22,7 @@ export function connectToObs(from: Sender, { onEvent, onIdentified }: Handlers) 
   // obs-websocket-js types this as `{ eventData }`, but the server emits the broadcast payload unwrapped
   obs.on("CustomEvent", (data) => {
     const envelope = data as unknown as Envelope
-    if (envelope.app === "obs-draw" && envelope.from !== from) onEvent(envelope.event, envelope.seq)
+    if (envelope.app === "obs-tablet-draw" && envelope.from !== from) onEvent(envelope.event, envelope.seq)
   })
   if (onIdentified) obs.on("Identified", onIdentified)
 
@@ -38,7 +38,7 @@ export function connectToObs(from: Sender, { onEvent, onIdentified }: Handlers) 
 
   let seq = 0
   const send = (event: DrawEvent) => {
-    const envelope: Envelope = { app: "obs-draw", from, seq: seq++, event }
+    const envelope: Envelope = { app: "obs-tablet-draw", from, seq: seq++, event }
     obs.call("BroadcastCustomEvent", { eventData: envelope as unknown as EventData }).catch(() => {})
   }
 

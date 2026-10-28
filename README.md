@@ -1,4 +1,4 @@
-# OBS Draw
+# OBS Tablet Draw
 
 Auf dem iPad (oder Telefon) über den aktuellen OBS-Inhalt zeichnen – mit Apple Pencil, Druckempfindlichkeit, Formen, Laserpointer und Zoom. Die Striche erscheinen live als Overlay im Stream.
 
@@ -131,11 +131,11 @@ Die Auswahl steht in der Toolbar.
 
 - **Verbindung:** grün = verbunden, gelb = verbinde…, rot = Passwort falsch
 - **Szene:** die aktuelle Program-Szene
-- **Overlay:** Name der Browser Source. Antippen blendet sie in OBS **in allen Szenen** ein oder aus. Gibt es mehrere, z. B. „OBS Draw Overlay (+1)“, werden alle gemeinsam geschaltet.
+- **Overlay:** Name der Browser Source. Antippen blendet sie in OBS **in allen Szenen** ein oder aus. Gibt es mehrere, z. B. „OBS Tablet Draw Overlay (+1)“, werden alle gemeinsam geschaltet.
   - **grau:** eingeblendet
   - **blau:** ausgeblendet – die Striche erscheinen auf dem iPad halbtransparent
   - **gelb gestrichelt („Overlay anlegen“):** es gibt noch kein Overlay; antippen legt es in der aktuellen Szene an
-  - **Weitere Szenen:** in OBS *Hinzufügen → Browser → Vorhandene hinzufügen → OBS Draw Overlay*
+  - **Weitere Szenen:** in OBS *Hinzufügen → Browser → Vorhandene hinzufügen → OBS Tablet Draw Overlay*
 - **Bild:** Alter des Hintergrundbilds, rot ab 3 s
 
 ## Fehlerbehebung
@@ -166,3 +166,7 @@ npm run build
 | `src/obs.ts` | Verbindung zu obs-websocket inkl. Reconnect |
 | `src/overlay.ts` | Browser Source; ordnet Events nach `seq`, weil obs-websocket Broadcasts nicht in Reihenfolge zustellt |
 | `src/ipad/` | Zeichen-App (React) |
+
+## Lizenz
+
+[MIT](LICENSE)

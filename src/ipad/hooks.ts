@@ -8,9 +8,9 @@ const OBS_SOURCE_VIDEO = 1 << 0
 
 const AUTHENTICATION_FAILED_CLOSE_CODE = 4009
 const OVERLAY_MARKER = "obs_draw_overlay"
-const OVERLAY_INPUT_NAME = "OBS Draw Overlay"
+const OVERLAY_INPUT_NAME = "OBS Tablet Draw Overlay"
 
-export const PROGRAM_SOURCE = "obs-draw:program"
+export const PROGRAM_SOURCE = "obs-tablet-draw:program"
 export const NO_SOURCE = ""
 
 export type ConnectionState = "connected" | "connecting" | "auth-failed"
