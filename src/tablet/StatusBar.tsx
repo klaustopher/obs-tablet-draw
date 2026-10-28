@@ -1,13 +1,16 @@
 import { Eye, EyeOff, Plus } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useConnectionState, useProgramScene, type ConnectionState, type OverlayVisibility } from "./hooks"
+import type { ConnectionState } from "./connectionState"
+import { useConnectionState, useProgramScene, type OverlayVisibility } from "./hooks"
 
 const STALE_AFTER_MS = 3000
 
 const CONNECTION_LABELS: Record<ConnectionState, string> = {
   connected: "Connected",
   connecting: "Connecting…",
-  "auth-failed": "Wrong password",
+  unreachable: "OBS not reachable",
+  "password-missing": "Password missing",
+  "wrong-password": "Wrong password",
 }
 
 interface Props {

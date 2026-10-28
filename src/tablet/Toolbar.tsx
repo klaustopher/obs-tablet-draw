@@ -19,7 +19,7 @@ import { useState, type ReactNode } from "react"
 import { createPortal } from "react-dom"
 import type { Tool } from "../protocol"
 import { session } from "./connection"
-import { NO_SOURCE, PROGRAM_SOURCE, type ObsInfo } from "./hooks"
+import { NO_SOURCE, PROGRAM_SOURCE, useConnectionState, type ObsInfo } from "./hooks"
 
 export type Mode = Tool | "eraser"
 
@@ -231,6 +231,7 @@ export function SizePicker({ value, color, onChange, compact }: PickerProps<numb
 
 export function HistoryControls() {
   const [clearAnchor, setClearAnchor] = useState<DOMRect>()
+  const disconnected = useConnectionState() !== "connected"
 
   const clear = () => {
     session.clear()
@@ -239,15 +240,16 @@ export function HistoryControls() {
 
   return (
     <div className="group">
-      <button className="tool" aria-label="Undo" onClick={() => session.undo()}>
+      <button className="tool" aria-label="Undo" disabled={disconnected} onClick={() => session.undo()}>
         <Undo2 size={ICON_SIZE} />
       </button>
-      <button className="tool" aria-label="Redo" onClick={() => session.redo()}>
+      <button className="tool" aria-label="Redo" disabled={disconnected} onClick={() => session.redo()}>
         <Redo2 size={ICON_SIZE} />
       </button>
       <button
         className={`tool ${clearAnchor ? "active" : ""}`}
         aria-label="Clear everything"
+        disabled={disconnected}
         onClick={(e) => setClearAnchor(e.currentTarget.getBoundingClientRect())}
       >
         <Trash size={ICON_SIZE} />
@@ -256,7 +258,7 @@ export function HistoryControls() {
       {clearAnchor && (
         <Popover anchor={clearAnchor} onClose={() => setClearAnchor(undefined)}>
           <span>Clear everything?</span>
-          <button className="danger-button" onClick={clear}>
+          <button className="danger-button" disabled={disconnected} onClick={clear}>
             Clear
           </button>
         </Popover>

@@ -1,7 +1,7 @@
 import { connectToObs } from "../obs"
 import { DrawingSession } from "./session"
 
-export const { obs, send } = connectToObs("tablet", {
+export const { obs, send, url, hasPassword } = connectToObs("tablet", {
   onEvent: (event) => {
     if (event.type === "sync:request") session.sync()
   },

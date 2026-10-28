@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { FULL_VIEW } from "../render"
+import { ConnectionNotice } from "./ConnectionNotice"
 import {
   NO_SOURCE,
   PROGRAM_SOURCE,
@@ -55,6 +56,7 @@ export function App() {
           view={view}
           onViewChange={setView}
         />
+        <ConnectionNotice />
       </main>
 
       <StatusBar screenshotAt={screenshot?.takenAt} hasSource={source !== undefined} overlay={overlay} />

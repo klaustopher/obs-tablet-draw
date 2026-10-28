@@ -107,7 +107,7 @@ The picker is in the toolbar.
 
 ### Status bar
 
-- **Connection:** green = connected, yellow = connecting…, red = wrong password
+- **Connection:** green = connected, yellow = connecting…, red = OBS not reachable, password missing or wrong. Without a connection, a card on the stage explains how to fix it, and drawing, undo, redo and clear are disabled.
 - **Scene:** the current program scene
 - **Overlay:** name of the Browser Source. Tapping it shows or hides it in OBS **in all scenes**. If there are several, e.g. "OBS Tablet Draw Overlay (+1)", they are toggled together.
   - **gray:** visible
@@ -122,8 +122,8 @@ The picker is in the toolbar.
 | --- | --- |
 | Tablet does not load the page (timeout), but it works on the machine | The firewall blocks port 3729, or the Wi-Fi isolates devices from each other (client isolation, typical for guest and office networks). Put the machine and the tablet on the same regular network, e.g. a hotspot or Tailscale. An HTTPS tunnel does not work: an HTTPS page must not open `ws://`. |
 | Saved link or home screen app no longer loads | Port 3729 was taken, so the server picked another one. Use the URL printed at startup, or quit whatever uses port 3729 and restart the server. |
-| Status bar: "Wrong password" | `?password=` is missing or wrong, e.g. after regenerating the password in OBS. |
-| Status bar stays yellow ("Connecting…") | WebSocket server not enabled in OBS, or port 4455 blocked by a firewall. |
+| "OBS is not reachable" | OBS is not running, the WebSocket server is not enabled, or it uses a port other than 4455 – then add `?port=…` to the URL. |
+| "Password missing" / "Wrong password" | `?password=` is missing from the URL or wrong, e.g. after regenerating the password in OBS. |
 | Status bar shows "Create overlay" although one exists | It was created by hand and has no marker. Delete it and recreate it via *Create overlay*. |
 | Strokes do not arrive in OBS | Reload the Browser Source in OBS with *Refresh cache of current page* in its properties. Check that it is on top and visible. If the password in OBS was changed, open the tablet page once with the new password – it updates the overlay. |
 | Overlay hangs or shows nothing | Only **one** drawing device may be connected at a time. Close other tabs or devices. |
