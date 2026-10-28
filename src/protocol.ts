@@ -20,7 +20,7 @@ export type DrawEvent =
   | { type: "sync"; strokes: Stroke[] }
   | { type: "sync:request" }
 
-export type Sender = "ipad" | "overlay"
+export type Sender = "tablet" | "overlay"
 
 export interface Envelope {
   app: "obs-tablet-draw"

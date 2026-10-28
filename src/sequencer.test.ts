@@ -58,7 +58,7 @@ describe("EventSequencer", () => {
     expect(ids()).toEqual(["x", "y", "z", "pending"])
   })
 
-  it("accepts a sync with a lower seq after the iPad reloads", () => {
+  it("accepts a sync with a lower seq after the tablet reloads", () => {
     const { sequencer, ids } = setup()
     sequencer.receive(sync(), 0)
     sequencer.receive(add("a"), 1)

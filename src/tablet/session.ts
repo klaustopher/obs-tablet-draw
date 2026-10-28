@@ -10,7 +10,7 @@ export interface Brush {
   size: number
 }
 
-// crypto.randomUUID() is unavailable because the iPad page is served over plain HTTP (no secure context)
+// crypto.randomUUID() is unavailable because the tablet page is served over plain HTTP (no secure context)
 const newId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
 
 function distanceToSegment([px, py]: number[], [ax, ay]: number[], [bx, by]: number[]) {

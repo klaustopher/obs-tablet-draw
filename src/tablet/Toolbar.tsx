@@ -24,14 +24,14 @@ import { NO_SOURCE, PROGRAM_SOURCE, type ObsInfo } from "./hooks"
 export type Mode = Tool | "eraser"
 
 const MODES: { mode: Mode; label: string; icon: LucideIcon }[] = [
-  { mode: "pen", label: "Stift", icon: Pen },
-  { mode: "highlighter", label: "Marker", icon: Highlighter },
+  { mode: "pen", label: "Pen", icon: Pen },
+  { mode: "highlighter", label: "Highlighter", icon: Highlighter },
   { mode: "laser", label: "Laser", icon: Laser },
-  { mode: "line", label: "Linie", icon: Slash },
-  { mode: "arrow", label: "Pfeil", icon: MoveUpRight },
-  { mode: "rect", label: "Rechteck", icon: Square },
+  { mode: "line", label: "Line", icon: Slash },
+  { mode: "arrow", label: "Arrow", icon: MoveUpRight },
+  { mode: "rect", label: "Rectangle", icon: Square },
   { mode: "ellipse", label: "Ellipse", icon: Circle },
-  { mode: "eraser", label: "Radierer", icon: Eraser },
+  { mode: "eraser", label: "Eraser", icon: Eraser },
 ]
 
 export const COLORS = ["#ff3b30", "#ffcc00", "#34c759", "#0a84ff", "#ffffff", "#000000"]
@@ -115,7 +115,7 @@ export function ToolPicker({ value, onChange, compact }: PickerProps<Mode>) {
 
   const { label, icon: Current } = MODES.find(({ mode }) => mode === value)!
   return (
-    <CompactGroup label={`Werkzeug: ${label}`} preview={<Current size={ICON_SIZE} />} popoverClassName="tool-grid">
+    <CompactGroup label={`Tool: ${label}`} preview={<Current size={ICON_SIZE} />} popoverClassName="tool-grid">
       {(close) =>
         buttons((mode) => {
           onChange(mode)
@@ -142,7 +142,7 @@ export function ColorPicker({ value, onChange, compact }: PickerProps<string>) {
         type="color"
         className={`swatch ${COLORS.includes(value) ? "" : "active"}`}
         value={value}
-        aria-label="Eigene Farbe"
+        aria-label="Custom color"
         onChange={(e) => onChange(e.target.value)}
       />
     </>
@@ -152,7 +152,7 @@ export function ColorPicker({ value, onChange, compact }: PickerProps<string>) {
 
   return (
     <CompactGroup
-      label="Farbe"
+      label="Color"
       preview={<span className="color-preview" style={{ background: value }} />}
       popoverClassName="swatch-row"
     >
@@ -184,7 +184,7 @@ export function SizePicker({ value, color, onChange, compact }: PickerProps<numb
     <button
       key={size}
       className={`tool ${value === size ? "active" : ""}`}
-      aria-label={`Strichstärke ${size}`}
+      aria-label={`Stroke width ${size}`}
       onClick={() => onChange(size)}
     >
       <SizeDot size={size + 4} color={color} />
@@ -195,7 +195,7 @@ export function SizePicker({ value, color, onChange, compact }: PickerProps<numb
   if (compact) {
     return (
       <CompactGroup
-        label="Strichstärke"
+        label="Stroke width"
         preview={<SizeDot size={Math.min(value + 4, MAX_PREVIEW_DOT)} color={color} />}
         popoverClassName="size-popover stacked"
       >
@@ -214,7 +214,7 @@ export function SizePicker({ value, color, onChange, compact }: PickerProps<numb
       {presets}
       <button
         className={`tool ${SIZE_PRESETS.includes(value) ? "" : "active"}`}
-        aria-label="Strichstärke einstellen"
+        aria-label="Adjust stroke width"
         onClick={(e) => setSliderAnchor(e.currentTarget.getBoundingClientRect())}
       >
         <SlidersHorizontal size={ICON_SIZE} />
@@ -239,15 +239,15 @@ export function HistoryControls() {
 
   return (
     <div className="group">
-      <button className="tool" aria-label="Rückgängig" onClick={() => session.undo()}>
+      <button className="tool" aria-label="Undo" onClick={() => session.undo()}>
         <Undo2 size={ICON_SIZE} />
       </button>
-      <button className="tool" aria-label="Wiederholen" onClick={() => session.redo()}>
+      <button className="tool" aria-label="Redo" onClick={() => session.redo()}>
         <Redo2 size={ICON_SIZE} />
       </button>
       <button
         className={`tool ${clearAnchor ? "active" : ""}`}
-        aria-label="Alles löschen"
+        aria-label="Clear everything"
         onClick={(e) => setClearAnchor(e.currentTarget.getBoundingClientRect())}
       >
         <Trash size={ICON_SIZE} />
@@ -255,9 +255,9 @@ export function HistoryControls() {
 
       {clearAnchor && (
         <Popover anchor={clearAnchor} onClose={() => setClearAnchor(undefined)}>
-          <span>Alles löschen?</span>
+          <span>Clear everything?</span>
           <button className="danger-button" onClick={clear}>
-            Löschen
+            Clear
           </button>
         </Popover>
       )}
@@ -275,17 +275,17 @@ interface SourcePickerProps {
 export function SourcePicker({ source, info, onSourceChange, compact }: SourcePickerProps) {
   return (
     <div className="group">
-      <label className={`select ${compact ? "compact" : ""}`} aria-label="Quelle">
+      <label className={`select ${compact ? "compact" : ""}`} aria-label="Source">
         <MonitorPlay size={ICON_SIZE} />
         <select value={source ?? NO_SOURCE} onChange={(e) => onSourceChange(e.target.value)} disabled={!info}>
-          <option value={NO_SOURCE}>Keine Quelle</option>
-          <option value={PROGRAM_SOURCE}>Programm</option>
-          <optgroup label="Szenen">
+          <option value={NO_SOURCE}>No source</option>
+          <option value={PROGRAM_SOURCE}>Program</option>
+          <optgroup label="Scenes">
             {info?.scenes.map((name) => (
               <option key={name}>{name}</option>
             ))}
           </optgroup>
-          <optgroup label="Quellen">
+          <optgroup label="Sources">
             {info?.inputs.map((name) => (
               <option key={name}>{name}</option>
             ))}

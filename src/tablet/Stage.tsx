@@ -245,8 +245,8 @@ export function Stage({ aspect, image, brush, dimmed, view, onViewChange }: Prop
         onPointerCancel={onPointerUp}
       />
       {view.zoom > 1 && (
-        <button className="zoom-badge" aria-label="Zoom zurücksetzen" onClick={() => onViewChange(FULL_VIEW)}>
-          {Math.round(view.zoom * 100)} %
+        <button className="zoom-badge" aria-label="Reset zoom" onClick={() => onViewChange(FULL_VIEW)}>
+          {Math.round(view.zoom * 100)}%
         </button>
       )}
       <Minimap view={view} image={image} onViewChange={onViewChange} />

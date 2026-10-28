@@ -4,7 +4,7 @@ cd /d "%~dp0"
 
 where node >nul 2>nul
 if errorlevel 1 (
-  echo Node.js wurde nicht gefunden. Bitte installieren: https://nodejs.org
+  echo Node.js was not found. Please install it: https://nodejs.org
   pause
   exit /b 1
 )

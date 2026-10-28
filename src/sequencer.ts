@@ -2,7 +2,7 @@ import type { Board } from "./board"
 import type { DrawEvent } from "./protocol"
 
 // obs-websocket dispatches requests and broadcasts on a thread pool, so events can arrive out of order.
-// Events are applied strictly by seq; a sync resets the sequence (iPad reload or reconnect).
+// Events are applied strictly by seq; a sync resets the sequence (tablet reload or reconnect).
 export class EventSequencer {
   private expectedSeq: number | undefined
   private readonly buffered = new Map<number, DrawEvent>()

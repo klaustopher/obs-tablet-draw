@@ -2,7 +2,7 @@ import { styleText } from "node:util"
 import { defineConfig, type Plugin, type PreviewServer, type ViteDevServer } from "vite"
 import react from "@vitejs/plugin-react"
 
-const PASSWORD_PLACEHOLDER = "?password=DEIN_PASSWORT"
+const PASSWORD_PLACEHOLDER = "?password=YOUR_PASSWORD"
 
 const allowedHosts = [
   ".local",
@@ -21,8 +21,8 @@ function printAppUrls(server: ViteDevServer | PreviewServer) {
     const url = (base: string) => styleText("cyan", `${base}${PASSWORD_PLACEHOLDER}`)
 
     console.log()
-    network.forEach((base, i) => console.log(`  ${label(i === 0 ? "iPad / Telefon:" : "")}${url(base)}`))
-    if (network.length === 0) console.log(`  ${label("iPad / Telefon:")}nicht erreichbar, Server mit --host starten`)
+    network.forEach((base, i) => console.log(`  ${label(i === 0 ? "Tablet / phone:" : "")}${url(base)}`))
+    if (network.length === 0) console.log(`  ${label("Tablet / phone:")}not reachable, start the server with --host`)
     console.log()
   }
 }

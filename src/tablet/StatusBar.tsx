@@ -5,9 +5,9 @@ import { useConnectionState, useProgramScene, type ConnectionState, type Overlay
 const STALE_AFTER_MS = 3000
 
 const CONNECTION_LABELS: Record<ConnectionState, string> = {
-  connected: "Verbunden",
-  connecting: "Verbinde…",
-  "auth-failed": "Passwort falsch",
+  connected: "Connected",
+  connecting: "Connecting…",
+  "auth-failed": "Wrong password",
 }
 
 interface Props {
@@ -26,9 +26,9 @@ function useNow() {
 }
 
 function screenshotLabel(age: number | undefined, hasSource: boolean) {
-  if (!hasSource) return "Keine Quelle"
-  if (age === undefined) return "Warte auf Bild…"
-  return `vor ${Math.floor(age / 1000)} s`
+  if (!hasSource) return "No source"
+  if (age === undefined) return "Waiting for image…"
+  return `${Math.floor(age / 1000)} s ago`
 }
 
 function OverlayStatus({ names, visible, toggle, create }: OverlayVisibility) {
@@ -36,7 +36,7 @@ function OverlayStatus({ names, visible, toggle, create }: OverlayVisibility) {
     return (
       <button className="overlay-toggle missing" onClick={create}>
         <Plus size={14} />
-        Overlay anlegen
+        Create overlay
       </button>
     )
   }
@@ -46,7 +46,7 @@ function OverlayStatus({ names, visible, toggle, create }: OverlayVisibility) {
   return (
     <button
       className={`overlay-toggle ${visible ? "" : "off"}`}
-      aria-label={visible ? "Overlay ausblenden" : "Overlay einblenden"}
+      aria-label={visible ? "Hide overlay" : "Show overlay"}
       onClick={toggle}
     >
       <Icon size={14} />
@@ -66,9 +66,9 @@ export function StatusBar({ screenshotAt, hasSource, overlay }: Props) {
   return (
     <div className="statusbar">
       <span className={`connection ${connection}`}>{CONNECTION_LABELS[connection]}</span>
-      {connection === "connected" && <span>Szene: {scene ?? "–"}</span>}
+      {connection === "connected" && <span>Scene: {scene ?? "–"}</span>}
       {connection === "connected" && <OverlayStatus {...overlay} />}
-      <span className={stale ? "stale" : ""}>Bild: {screenshotLabel(age, hasSource)}</span>
+      <span className={stale ? "stale" : ""}>Image: {screenshotLabel(age, hasSource)}</span>
     </div>
   )
 }
