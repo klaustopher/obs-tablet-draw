@@ -30,6 +30,7 @@ export function App() {
   const [size, setSize] = useStoredState("obs-tablet-draw:size", 6)
   const [selectedSource, selectSource] = useStoredState<string | undefined>("obs-tablet-draw:source", undefined)
   const [view, setView] = useState(FULL_VIEW)
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const compact = useMediaQuery(COMPACT_TOOLBAR_QUERY)
 
   const info = useObsInfo()
@@ -56,10 +57,15 @@ export function App() {
           view={view}
           onViewChange={setView}
         />
-        <ConnectionNotice />
+        <ConnectionNotice open={settingsOpen} onClose={() => setSettingsOpen(false)} />
       </main>
 
-      <StatusBar screenshotAt={screenshot?.takenAt} hasSource={source !== undefined} overlay={overlay} />
+      <StatusBar
+        screenshotAt={screenshot?.takenAt}
+        hasSource={source !== undefined}
+        overlay={overlay}
+        onOpenSettings={() => setSettingsOpen(true)}
+      />
     </div>
   )
 }

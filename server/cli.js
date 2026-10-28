@@ -21,7 +21,7 @@ try {
   if (port !== PREFERRED_PORT) console.log(styleText("yellow", `  Port ${PREFERRED_PORT} is in use, using ${port} instead.\n`))
   addresses.forEach((address, i) => {
     const label = styleText("bold", (i === 0 ? "Tablet / phone:" : "").padEnd(18))
-    console.log(`  ${label}${styleText("cyan", `http://${address}:${port}/?password=OBS_WEBSOCKET_PASSWORD`)}`)
+    console.log(`  ${label}${styleText("cyan", `http://${address}:${port}/`)}`)
   })
   if (addresses.length === 0) console.log("  Not reachable from other devices – no network connection found.")
   console.log("\n  Press Ctrl+C to stop.\n")

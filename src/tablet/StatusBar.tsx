@@ -17,6 +17,7 @@ interface Props {
   screenshotAt?: number
   hasSource: boolean
   overlay: OverlayVisibility
+  onOpenSettings: () => void
 }
 
 function useNow() {
@@ -58,7 +59,7 @@ function OverlayStatus({ names, visible, toggle, create }: OverlayVisibility) {
   )
 }
 
-export function StatusBar({ screenshotAt, hasSource, overlay }: Props) {
+export function StatusBar({ screenshotAt, hasSource, overlay, onOpenSettings }: Props) {
   const connection = useConnectionState()
   const scene = useProgramScene()
   const now = useNow()
@@ -68,7 +69,9 @@ export function StatusBar({ screenshotAt, hasSource, overlay }: Props) {
 
   return (
     <div className="statusbar">
-      <span className={`connection ${connection}`}>{CONNECTION_LABELS[connection]}</span>
+      <button className={`connection ${connection}`} aria-label="Connection settings" onClick={onOpenSettings}>
+        {CONNECTION_LABELS[connection]}
+      </button>
       {connection === "connected" && <span>Scene: {scene ?? "–"}</span>}
       {connection === "connected" && <OverlayStatus {...overlay} />}
       <span className={stale ? "stale" : ""}>Image: {screenshotLabel(age, hasSource)}</span>
