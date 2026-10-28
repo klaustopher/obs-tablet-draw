@@ -14,7 +14,7 @@ export function connectToObs(from: Sender, { onEvent, onIdentified }: Handlers) 
   const params = new URLSearchParams(location.search)
   const host = params.get("host") ?? location.hostname
   const port = params.get("port") ?? "4455"
-  const password = params.get("password") ?? undefined
+  const password = params.get("password") || undefined
   const url = `ws://${host}:${port}`
 
   const obs = new OBSWebSocket()
@@ -42,5 +42,5 @@ export function connectToObs(from: Sender, { onEvent, onIdentified }: Handlers) 
     obs.call("BroadcastCustomEvent", { eventData: envelope as unknown as EventData }).catch(() => {})
   }
 
-  return { obs, send }
+  return { obs, send, url, hasPassword: password !== undefined }
 }

@@ -1,19 +1,17 @@
-import { useEffect, useState } from "react"
-import { obs, session } from "./connection"
+import { useEffect, useState, useSyncExternalStore } from "react"
+import { hasPassword, obs, session } from "./connection"
+import { stateAfterClose, type ConnectionState } from "./connectionState"
 
 const SCREENSHOT_INTERVAL_MS = 1000
 const PREVIEW_SCREENSHOT_WIDTH = 1600
 const MAX_SCREENSHOT_WIDTH = 4096
 const OBS_SOURCE_VIDEO = 1 << 0
 
-const AUTHENTICATION_FAILED_CLOSE_CODE = 4009
 const OVERLAY_MARKER = "obs_draw_overlay"
 const OVERLAY_INPUT_NAME = "OBS Tablet Draw Overlay"
 
 export const PROGRAM_SOURCE = "obs-tablet-draw:program"
 export const NO_SOURCE = ""
-
-export type ConnectionState = "connected" | "connecting" | "auth-failed"
 
 export interface ObsInfo {
   inputs: string[]
@@ -62,23 +60,29 @@ export function useStoredState<T>(key: string, initial: T) {
   return [value, update] as const
 }
 
+let connectionState: ConnectionState = "connecting"
+let socketOpened = false
+const connectionListeners = new Set<() => void>()
+
+function setConnectionState(state: ConnectionState) {
+  connectionState = state
+  connectionListeners.forEach((listener) => listener())
+}
+
+obs.on("ConnectionOpened", () => (socketOpened = true))
+obs.on("Identified", () => setConnectionState("connected"))
+obs.on("ConnectionClosed", ({ code }) => {
+  setConnectionState(stateAfterClose(socketOpened, code, hasPassword))
+  socketOpened = false
+})
+
+function subscribeToConnection(listener: () => void) {
+  connectionListeners.add(listener)
+  return () => connectionListeners.delete(listener)
+}
+
 export function useConnectionState() {
-  const [state, setState] = useState<ConnectionState>(obs.identified ? "connected" : "connecting")
-
-  useEffect(() => {
-    const identified = () => setState("connected")
-    const closed = ({ code }: { code: number }) =>
-      setState(code === AUTHENTICATION_FAILED_CLOSE_CODE ? "auth-failed" : "connecting")
-
-    obs.on("Identified", identified)
-    obs.on("ConnectionClosed", closed)
-    return () => {
-      obs.off("Identified", identified)
-      obs.off("ConnectionClosed", closed)
-    }
-  }, [])
-
-  return state
+  return useSyncExternalStore(subscribeToConnection, () => connectionState)
 }
 
 export function useProgramScene() {

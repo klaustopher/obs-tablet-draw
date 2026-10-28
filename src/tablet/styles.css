@@ -98,6 +98,12 @@ button {
   color: #fff;
 }
 
+.tool:disabled,
+.danger-button:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
 .swatch {
   width: 28px;
   height: 28px;
@@ -281,11 +287,54 @@ input.swatch:not(.active)::-webkit-color-swatch {
 }
 
 .stage-area {
+  position: relative;
   flex: 1;
   min-height: 0;
   display: grid;
   place-items: center;
   container-type: size;
+}
+
+.connection-notice {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.55);
+  touch-action: none;
+}
+
+.connection-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+  padding: 18px 22px;
+  font-size: 15px;
+  line-height: 1.4;
+  text-align: center;
+  background: var(--surface-strong);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.connection-card:not(.connecting) strong {
+  color: var(--danger);
+}
+
+.connection-card code {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.connection-card p {
+  margin: 0;
+  color: var(--muted);
 }
 
 .stage {
@@ -399,7 +448,7 @@ input.swatch:not(.active)::-webkit-color-swatch {
   background: var(--success);
 }
 
-.connection.auth-failed::before {
+.connection:is(.unreachable, .password-missing, .wrong-password)::before {
   background: var(--danger);
 }
 
