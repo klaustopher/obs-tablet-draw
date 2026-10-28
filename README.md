@@ -150,6 +150,14 @@ npm start          # Serves dist/ exactly like `npx obs-tablet-draw`
 | `src/tablet/` | Drawing app (React) |
 | `server/` | Static server behind `npx obs-tablet-draw` |
 
+### Releasing
+
+Releases are managed with [Changesets](https://github.com/changesets/changesets) and published to npm via trusted publishing:
+
+1. Add a changeset to every PR that should show up in a release: `npm run changeset` (pick patch / minor / major and describe the change).
+2. After merging to `main`, the release workflow opens a "Version Packages" PR that bumps the version and updates `CHANGELOG.md`.
+3. Merging that PR publishes to npm and creates the git tag and GitHub release.
+
 ## License
 
 [MIT](LICENSE)
