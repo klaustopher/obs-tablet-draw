@@ -27,8 +27,7 @@ Runs on **Windows, macOS and Linux**.
 
 *Tools → WebSocket Server Settings*:
 1. Check *Enable WebSocket server*.
-2. Keep port `4455`.
-3. Copy the password from *Show Connect Info*.
+2. Note the port (default `4455`) and the password from *Show Connect Info* – the tablet asks for both in step 3.
 
 ### 2. Start the server
 
@@ -40,15 +39,17 @@ npx obs-tablet-draw@latest
 
 Start it before the stream and simply quit it afterwards (close the window or press `Ctrl+C`). `@latest` makes sure you always get the newest release.
 
-The app then runs on port **3729** (*DRAW* on a phone keypad) on all network interfaces. If that port is taken, it picks the next free one; overlays that already exist in OBS are updated automatically as soon as the tablet connects. On startup the window shows the complete URL for the tablet – replace `OBS_WEBSOCKET_PASSWORD` with the password from step 1. On the first start the firewall may ask – allow access on **private** networks.
+The app then runs on port **3729** (*DRAW* on a phone keypad) on all network interfaces. If that port is taken, it picks the next free one; overlays that already exist in OBS are updated automatically as soon as the tablet connects. On startup the window shows the URL for the tablet. On the first start the firewall may ask – allow access on **private** networks.
 
 ### 3. Tablet / phone
 
 Open in the browser:
 
 ```
-http://<address-of-the-machine>:3729/?password=OBS_WEBSOCKET_PASSWORD
+http://<address-of-the-machine>:3729/
 ```
+
+On the first visit the app asks for the WebSocket password (and the port, if it is not `4455`).
 
 The address can be the **IP** of the OBS machine, e.g. `192.168.1.20`; the server prints it on startup. The **local hostname** `<name>.local` is more stable, if your system announces it on the network:
 
@@ -60,16 +61,11 @@ Added to the home screen (Safari: *Share → Add to Home Screen*), the app runs 
 
 The first time, tap **Create overlay** in the status bar – the app sets up the Browser Source in OBS by itself.
 
-## URL parameters
+## Connection settings
 
-| Parameter  | Default                         | Meaning                       |
-| ---------- | ------------------------------- | ----------------------------- |
-| `password` | –                               | Password of the OBS WebSocket |
-| `host`     | Host the page was loaded from   | Machine running OBS           |
-| `port`     | `4455`                          | Port of the OBS WebSocket     |
+Password and port are stored on the tablet, never in the address bar, so they cannot leak when the browser window ends up on stream. Tap the connection status in the status bar to change them or to forget the password.
 
-The parameters apply to both pages (tablet and overlay).
-
+The overlay connects to OBS on its own; the tablet writes password and port into the overlay's URL in OBS (after the `#`, so they are never sent to the server) and keeps it up to date.
 ## Usage
 
 ### Tools
@@ -107,7 +103,7 @@ The picker is in the toolbar.
 
 ### Status bar
 
-- **Connection:** green = connected, yellow = connecting…, red = OBS not reachable, password missing or wrong. Without a connection, a card on the stage explains how to fix it, and drawing, undo, redo and clear are disabled.
+- **Connection:** green = connected, yellow = connecting…, red = OBS not reachable, password missing or wrong. Without a connection, a card on the stage explains how to fix it and asks for password and port; drawing, undo, redo and clear are disabled. Tap it to open the connection settings.
 - **Scene:** the current program scene
 - **Overlay:** name of the Browser Source. Tapping it shows or hides it in OBS **in all scenes**. If there are several, e.g. "OBS Tablet Draw Overlay (+1)", they are toggled together.
   - **gray:** visible
@@ -122,10 +118,10 @@ The picker is in the toolbar.
 | --- | --- |
 | Tablet does not load the page (timeout), but it works on the machine | The firewall blocks port 3729, or the Wi-Fi isolates devices from each other (client isolation, typical for guest and office networks). Put the machine and the tablet on the same regular network, e.g. a hotspot or Tailscale. An HTTPS tunnel does not work: an HTTPS page must not open `ws://`. |
 | Saved link or home screen app no longer loads | Port 3729 was taken, so the server picked another one. Use the URL printed at startup, or quit whatever uses port 3729 and restart the server. |
-| "OBS is not reachable" | OBS is not running, the WebSocket server is not enabled, or it uses a port other than 4455 – then add `?port=…` to the URL. |
-| "Password missing" / "Wrong password" | `?password=` is missing from the URL or wrong, e.g. after regenerating the password in OBS. |
+| "OBS is not reachable" | OBS is not running, the WebSocket server is not enabled, or the port on the card does not match the one in OBS. |
+| "Password missing" / "Wrong password" | Enter the password from *Show Connect Info* on the card, e.g. after regenerating it in OBS. |
 | Status bar shows "Create overlay" although one exists | It was created by hand and has no marker. Delete it and recreate it via *Create overlay*. |
-| Strokes do not arrive in OBS | Reload the Browser Source in OBS with *Refresh cache of current page* in its properties. Check that it is on top and visible. If the password in OBS was changed, open the tablet page once with the new password – it updates the overlay. |
+| Strokes do not arrive in OBS | Reload the Browser Source in OBS with *Refresh cache of current page* in its properties. Check that it is on top and visible. If the password in OBS was changed, enter the new one on the tablet – it updates the overlay. |
 | Overlay hangs or shows nothing | Only **one** drawing device may be connected at a time. Close other tabs or devices. |
 
 ## Development

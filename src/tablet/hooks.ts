@@ -1,6 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react"
-import { hasPassword, obs, session } from "./connection"
+import { getSettings, obs, session, subscribeToSettings } from "./connection"
 import { stateAfterClose, type ConnectionState } from "./connectionState"
+import { readStored, writeStored } from "./storage"
 
 const SCREENSHOT_INTERVAL_MS = 1000
 const PREVIEW_SCREENSHOT_WIDTH = 1600
@@ -39,22 +40,11 @@ export function useMediaQuery(query: string) {
 }
 
 export function useStoredState<T>(key: string, initial: T) {
-  const [value, setValue] = useState<T>(() => {
-    try {
-      const stored = localStorage.getItem(key)
-      return stored === null ? initial : (JSON.parse(stored) as T)
-    } catch {
-      return initial
-    }
-  })
+  const [value, setValue] = useState<T>(() => readStored(key, initial))
 
   const update = (next: T) => {
     setValue(next)
-    try {
-      localStorage.setItem(key, JSON.stringify(next))
-    } catch {
-      // storage unavailable (private browsing); the value just won't persist
-    }
+    writeStored(key, next)
   }
 
   return [value, update] as const
@@ -72,7 +62,7 @@ function setConnectionState(state: ConnectionState) {
 obs.on("ConnectionOpened", () => (socketOpened = true))
 obs.on("Identified", () => setConnectionState("connected"))
 obs.on("ConnectionClosed", ({ code }) => {
-  setConnectionState(stateAfterClose(socketOpened, code, hasPassword))
+  setConnectionState(stateAfterClose(socketOpened, code, getSettings().password !== undefined))
   socketOpened = false
 })
 
@@ -83,6 +73,10 @@ function subscribeToConnection(listener: () => void) {
 
 export function useConnectionState() {
   return useSyncExternalStore(subscribeToConnection, () => connectionState)
+}
+
+export function useConnectionSettings() {
+  return useSyncExternalStore(subscribeToSettings, getSettings)
 }
 
 export function useProgramScene() {
@@ -132,10 +126,11 @@ async function overlayItemsOf(sceneName: string, overlayNames: string[]) {
 }
 
 function overlayUrl() {
+  const { port, password } = getSettings()
   const url = new URL("overlay.html", location.href)
   url.hostname = "localhost"
-  url.search = location.search
-  url.searchParams.delete("host")
+  url.search = ""
+  url.hash = new URLSearchParams(password ? { port: String(port), password } : { port: String(port) }).toString()
   return url.toString()
 }
 
