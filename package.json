@@ -1,6 +1,6 @@
 {
   "name": "obs-tablet-draw",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Draw on top of your OBS output from a tablet or phone – live as an overlay in the stream.",
   "license": "MIT",
   "repository": {
