@@ -23,40 +23,34 @@ Runs on **Windows, macOS and Linux**.
 
 ## Setup
 
-### 1. Install and build
-
-Skip this on Windows – `start.bat` takes care of it in step 3.
-
-```sh
-npm install
-npm run build
-```
-
-### 2. Enable the WebSocket server in OBS
+### 1. Enable the WebSocket server in OBS
 
 *Tools → WebSocket Server Settings*:
 1. Check *Enable WebSocket server*.
 2. Keep port `4455`.
 3. Copy the password from *Show Connect Info*.
 
-### 3. Start the server
+### 2. Start the server
 
-Start it before the stream and simply quit it afterwards (close the window or press `Ctrl+C`).
+On the machine running OBS, open a terminal (on Windows: PowerShell or Command Prompt) and run:
 
-- **Windows:** Double-click `start.bat`. On the first run it installs the dependencies; after that it rebuilds on every start – so after updates, just restart it.
-- **macOS / Linux:** `npm run preview`. After updates, run `npm run build` first.
+```sh
+npx obs-tablet-draw@latest
+```
 
-The app then runs on port **4173** on all network interfaces. On startup the window shows the complete URL for the tablet – replace `YOUR_PASSWORD` with the password from step 2. On the first start the firewall may ask – allow access on **private** networks.
+Start it before the stream and simply quit it afterwards (close the window or press `Ctrl+C`). `@latest` makes sure you always get the newest release.
 
-### 4. Tablet / phone
+The app then runs on port **3729** (*DRAW* on a phone keypad) on all network interfaces. If that port is taken, it picks the next free one; overlays that already exist in OBS are updated automatically as soon as the tablet connects. On startup the window shows the complete URL for the tablet – replace `OBS_WEBSOCKET_PASSWORD` with the password from step 1. On the first start the firewall may ask – allow access on **private** networks.
+
+### 3. Tablet / phone
 
 Open in the browser:
 
 ```
-http://<address-of-the-machine>:4173/?password=YOUR_PASSWORD
+http://<address-of-the-machine>:3729/?password=OBS_WEBSOCKET_PASSWORD
 ```
 
-The address can be the **IP** of the OBS machine, e.g. `192.168.1.20`. `npm run preview` prints it under *Network* on startup. The **local hostname** `<name>.local` is more stable, if your system announces it on the network:
+The address can be the **IP** of the OBS machine, e.g. `192.168.1.20`; the server prints it on startup. The **local hostname** `<name>.local` is more stable, if your system announces it on the network:
 
 - **macOS:** always, found under *System Settings → General → Sharing → Local hostname*
 - **Linux:** with a running `avahi-daemon`
@@ -75,22 +69,6 @@ The first time, tap **Create overlay** in the status bar – the app sets up the
 | `port`     | `4455`                          | Port of the OBS WebSocket     |
 
 The parameters apply to both pages (tablet and overlay).
-
-## Allowing hostnames
-
-Vite only answers requests to `localhost`, IP addresses and – through our configuration – `*.local`. Allow further hostnames, e.g. your own DNS name or a Tailscale name, as a comma-separated list in `OBS_DRAW_ALLOWED_HOSTS`. This applies to `npm run dev` and `npm run preview`:
-
-```sh
-# macOS / Linux
-OBS_DRAW_ALLOWED_HOSTS="studio.lan,.ts.net" npm run preview
-```
-
-```bat
-:: Windows: set permanently, takes effect the next time start.bat is started
-setx OBS_DRAW_ALLOWED_HOSTS "studio.lan,.ts.net"
-```
-
-A leading dot allows the name and all its subdomains: `.ts.net` therefore covers `my-pc.tailnet-xyz.ts.net`.
 
 ## Usage
 
@@ -142,21 +120,23 @@ The picker is in the toolbar.
 
 | Symptom | Cause / solution |
 | --- | --- |
-| Tablet does not load the page (timeout), but it works on the machine | The firewall blocks port 4173, or the Wi-Fi isolates devices from each other (client isolation, typical for guest and office networks). Put the machine and the tablet on the same regular network, e.g. a hotspot or Tailscale. An HTTPS tunnel does not work: an HTTPS page must not open `ws://`. |
-| "Blocked request. This host is not allowed" | A hostname other than `*.local` or an IP. Allow it via `OBS_DRAW_ALLOWED_HOSTS` (see [Allowing hostnames](#allowing-hostnames)) and restart the server. |
+| Tablet does not load the page (timeout), but it works on the machine | The firewall blocks port 3729, or the Wi-Fi isolates devices from each other (client isolation, typical for guest and office networks). Put the machine and the tablet on the same regular network, e.g. a hotspot or Tailscale. An HTTPS tunnel does not work: an HTTPS page must not open `ws://`. |
+| Saved link or home screen app no longer loads | Port 3729 was taken, so the server picked another one. Use the URL printed at startup, or quit whatever uses port 3729 and restart the server. |
 | Status bar: "Wrong password" | `?password=` is missing or wrong, e.g. after regenerating the password in OBS. |
 | Status bar stays yellow ("Connecting…") | WebSocket server not enabled in OBS, or port 4455 blocked by a firewall. |
 | Status bar shows "Create overlay" although one exists | It was created by hand and has no marker. Delete it and recreate it via *Create overlay*. |
-| Strokes do not arrive in OBS | Reload the Browser Source in OBS with *Refresh cache of current page* in its properties. Check that it is on top and visible. If the password in OBS was changed, delete the overlay and create it again. |
+| Strokes do not arrive in OBS | Reload the Browser Source in OBS with *Refresh cache of current page* in its properties. Check that it is on top and visible. If the password in OBS was changed, open the tablet page once with the new password – it updates the overlay. |
 | Overlay hangs or shows nothing | Only **one** drawing device may be connected at a time. Close other tabs or devices. |
 
 ## Development
 
 ```sh
+npm install
 npm run dev        # Dev server with HMR on port 5173 (also on the LAN)
-npm run typecheck  # App (tsconfig.json) and vite.config.ts (tsconfig.node.json)
+npm run typecheck  # App (tsconfig.json) and server + vite.config.ts (tsconfig.node.json)
 npm test           # Vitest, also runs in GitHub Actions on push and PR
 npm run build
+npm start          # Serves dist/ exactly like `npx obs-tablet-draw`
 ```
 
 | Path | Contents |
@@ -168,6 +148,7 @@ npm run build
 | `src/overlay.ts` | Browser Source |
 | `src/sequencer.ts` | Orders events by `seq`, because obs-websocket does not deliver broadcasts in order |
 | `src/tablet/` | Drawing app (React) |
+| `server/` | Static server behind `npx obs-tablet-draw` |
 
 ## License
 

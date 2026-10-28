@@ -1,27 +1,41 @@
 {
   "name": "obs-tablet-draw",
-  "private": true,
+  "version": "1.0.0",
+  "description": "Draw on top of your OBS output from a tablet or phone – live as an overlay in the stream.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klaustopher/obs-tablet-draw.git"
+  },
   "type": "module",
+  "bin": {
+    "obs-tablet-draw": "server/cli.js"
+  },
+  "files": [
+    "dist",
+    "server/*.js"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "dev": "vite --host",
     "build": "npm run typecheck && vite build",
-    "preview": "vite preview --host",
+    "start": "node server/cli.js",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json"
-  },
-  "dependencies": {
-    "lucide-react": "^1.63.0",
-    "obs-websocket-js": "^5.0.8",
-    "perfect-freehand": "^1.2.3",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json",
+    "prepack": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "lucide-react": "^1.63.0",
+    "obs-websocket-js": "^5.0.8",
+    "perfect-freehand": "^1.2.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^5.0.5"

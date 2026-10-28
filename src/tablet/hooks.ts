@@ -102,14 +102,24 @@ export function useProgramScene() {
 
 async function findOverlayInputs() {
   const { inputs } = await obs.call("GetInputList", { inputKind: "browser_source" })
-  const names = await Promise.all(
+  const overlays = await Promise.all(
     inputs.map(async (input) => {
       const inputName = String(input.inputName)
       const { inputSettings } = await obs.call("GetInputSettings", { inputName })
-      return inputSettings[OVERLAY_MARKER] === true ? inputName : undefined
+      return inputSettings[OVERLAY_MARKER] === true ? { inputName, url: inputSettings.url } : undefined
     }),
   )
-  return names.filter((name) => name !== undefined)
+  return overlays.filter((overlay) => overlay !== undefined)
+}
+
+// The server falls back to another port when its preferred one is taken, so overlays may point at a stale URL
+async function updateOverlayUrls(overlays: { inputName: string; url: unknown }[]) {
+  const url = overlayUrl()
+  await Promise.all(
+    overlays
+      .filter((overlay) => overlay.url !== url)
+      .map(({ inputName }) => obs.call("SetInputSettings", { inputName, inputSettings: { url } })),
+  )
 }
 
 async function overlayItemsOf(sceneName: string, overlayNames: string[]) {
@@ -139,9 +149,10 @@ export function useOverlayVisibility() {
       setVisible(items.some((item) => item.sceneItemEnabled))
     }
     const load = async () => {
-      overlayNames = await findOverlayInputs()
+      const overlays = await findOverlayInputs()
+      overlayNames = overlays.map(({ inputName }) => inputName)
       setNames(overlayNames)
-      await refresh()
+      await Promise.all([refresh(), updateOverlayUrls(overlays)])
     }
 
     const loadEvents = ["Identified", "InputCreated", "InputRemoved", "InputNameChanged"] as const
